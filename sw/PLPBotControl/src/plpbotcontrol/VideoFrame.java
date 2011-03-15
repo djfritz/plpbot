@@ -25,7 +25,17 @@ public class VideoFrame extends javax.swing.JFrame {
 
     /** Creates new form VideoFrame */
     public VideoFrame() {
+        try {
+
         initComponents();
+
+        Global.streamConnection = Global.streamLocator.openConnection();
+        Global.streamConnection.setDoInput(true);
+        Global.streamConnection.setUseCaches(false);
+
+        } catch(Exception e) {
+            System.err.println(this + " exception: " + e);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -59,10 +69,17 @@ public class VideoFrame extends javax.swing.JFrame {
 
 }
 
-class MyCanvas extends java.awt.Canvas {
-
+class VideoDisplayThread extends Thread {
     @Override
-    public void paint(java.awt.Graphics g) {
+    public void run() {
+        try {
 
+        while(true) {
+            byte image[] = new byte[Global.streamConnection.getInputStream().read(null)];
+        }
+
+        } catch(Exception e) {
+            System.err.println(this + " exception: " + e);
+        }
     }
 }

@@ -29,11 +29,17 @@ public class Main {
     public static void main(String[] args) {
         try {
 
-        Global.streamLocator = new java.net.URI(args[0]);
-        (new VideoFrame()).setVisible(true);
+        if(args.length < 1) {
+            System.err.println("missing camera's IP address");
+            return;
+        }
+
+        Global.streamLocator = new java.net.URL("http://" + args[0] + "/axis-cgi/jpg/image.cgi");
+        Global.videoFrame = new VideoFrame();
+        Global.videoFrame.setVisible(true);
 
         } catch(Exception e) {
-            System.err.println("dumbass: " + e);
+            System.err.println("exception: " + e);
         }
     }
 

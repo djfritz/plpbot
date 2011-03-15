@@ -17,12 +17,15 @@
 
 package plpbotcontrol;
 
-import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  *
  * @author wira
  */
 public class Global {
-    public static URI streamLocator;
+    public static VideoFrame    videoFrame;
+    public static URL           streamLocator;
+    public static URLConnection streamConnection;
 }
