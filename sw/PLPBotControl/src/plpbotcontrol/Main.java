@@ -29,17 +29,25 @@ public class Main {
     public static void main(String[] args) {
         try {
 
-        if(args.length < 1) {
-            System.err.println("missing camera's IP address");
+        if(args.length != 1 && args.length != 3) {
+            System.err.println("usage: java -jar PLPBotControl [camera's IP address] [base station IP address] [port]");
+            System.err.println("OR to view camera only: java -jar PLPBotControl [camera's IP address]");
+
             return;
         }
 
         Global.streamLocator = new java.net.URL("http://" + args[0] + "/axis-cgi/jpg/image.cgi");
+        if(args.length == 3) {
+            Global.baseStationHost = args[1];
+            Global.baseStationPort = Integer.parseInt(args[2]);
+            Global.controlFrame = new ControlFrame();
+            Global.controlFrame.setVisible(true);
+        }
         Global.videoFrame = new VideoFrame();
         Global.videoFrame.setVisible(true);
 
         } catch(Exception e) {
-            System.err.println("exception: " + e);
+            System.err.println("main exception: " + e);
         }
     }
 

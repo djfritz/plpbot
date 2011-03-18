@@ -19,6 +19,7 @@ package plpbotcontrol;
 
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.Socket;
 import java.awt.Image;
 
 /**
@@ -27,9 +28,17 @@ import java.awt.Image;
  */
 public class Global {
     public static VideoFrame    videoFrame;
+    public static ControlFrame  controlFrame;
+    public static Socket        baseStation;
     public static URL           streamLocator;
     public static URLConnection streamConnection;
     public static Image         streamFrame;
+    public static String        baseStationHost;
+    public static int           baseStationPort;
 
     public static int           buffers = 10;
+
+    public static int           grabberRate = 1;
+    public static int           painterRate = 1;
+    public static int           senderRate = 50;
 }

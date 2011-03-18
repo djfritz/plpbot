@@ -26,6 +26,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
+import javax.swing.JComponent;
 
 /**
  *
@@ -49,15 +50,16 @@ public class VideoFrame extends javax.swing.JFrame {
         canvas1.setSize(new Dimension(640, 480));
         
         this.add(canvas1);
-        canvas1.createBufferStrategy(2);
+        //canvas1.createBufferStrategy(2);
 
-        this.setSize(new Dimension(660, 500));
+        this.setSize(new Dimension(canvas1.getWidth(), canvas1.getHeight()));
         this.pack();
 
         (new VideoDisplayThread(canvas1)).start();
+        (new GrabberThread()).start();
 
         } catch(Exception e) {
-            System.err.println(this + " exception: " + e);
+            System.err.println("video frame exception: " + e);
         }
     }
 
@@ -92,6 +94,24 @@ public class VideoFrame extends javax.swing.JFrame {
 
 }
 
+class GrabberThread extends Thread {
+    @Override
+    public void run() {
+        try {
+            
+        while(true) {
+            Global.streamFrame = ImageIO.read(Global.streamLocator);
+            Thread.sleep(Global.grabberRate);
+        }
+
+        }catch (Exception e) {
+            Global.streamFrame = null;
+            System.err.println("grabber exception: " + e);
+            System.exit(-1);
+        }
+    }
+}
+
 class VideoDisplayThread extends Thread {
     
     CamCanvas canvas1;
@@ -107,21 +127,21 @@ class VideoDisplayThread extends Thread {
         try {
 
         while(true) {
-            canvas1.setImage(ImageIO.read(Global.streamLocator));
             canvas1.refresh();
-            //Thread.sleep(100);
+            Thread.sleep(Global.painterRate);
         }
-
             
         } catch(Exception e) {
-            System.err.println(this + " exception: " + e);
+            System.err.println("painter exception: " + e);
+            System.exit(-1);
         }
     }
 }
 
-class CamCanvas extends Canvas {
+class CamCanvas extends JComponent {
 
     private BufferedImage I;
+    Graphics2D bufferGraphics;
 
     public CamCanvas(BufferedImage I) {
         this.I = I;
@@ -133,18 +153,32 @@ class CamCanvas extends Canvas {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(I, 0, 0, Color.BLACK, null);
+        if(Global.streamFrame != null) {
+            BufferedImage frame = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+            bufferGraphics = frame.createGraphics();
+            bufferGraphics.drawImage(Global.streamFrame, null, null);
+            g.drawImage(frame, 0, 0, null);
+            g.setColor(new Color(255, 0, 0));
+            g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 15));
+            g.drawString(Global.streamLocator.getHost(), 3, 475);
+            g.setColor(new Color(200, 200, 200));
+            g.drawRect(315, 238, 10, 4);
+            g.drawRect(318, 235, 4, 10);
+            g.drawOval(310, 230, 20, 20);
+            g.drawOval(256, 176, 128, 128);
+            g.drawLine(320, 0, 320, 480);
+            g.drawLine(0, 240, 640, 240);
+            for(int i = 1; i < 10; i++)
+                g.drawLine(i * 64, 230, i * 64, 250);
+        } else {
+            g.setColor(new Color(255, 0, 0));
+            g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 40));
+            g.drawString("NO DATA", 0, 0);
+        }
     }
 
     public void refresh() {
-        try {
-            Graphics2D g2 = I.createGraphics();
-            g2.drawImage(I, null, null);
-            this.repaint();
-        }
-        catch(Exception e) {
-
-        }
+        this.repaint();
     }
 }
 
