@@ -19,6 +19,7 @@ package plpbotcontrol;
 
 import java.net.URL;
 import java.net.URLConnection;
+import java.awt.Image;
 
 /**
  *
@@ -28,4 +29,7 @@ public class Global {
     public static VideoFrame    videoFrame;
     public static URL           streamLocator;
     public static URLConnection streamConnection;
+    public static Image         streamFrame;
+
+    public static int           buffers = 10;
 }

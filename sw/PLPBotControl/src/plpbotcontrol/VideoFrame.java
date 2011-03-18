@@ -17,11 +17,23 @@
 
 package plpbotcontrol;
 
+import javax.imageio.ImageIO;
+import java.io.InputStream;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferStrategy;
+import java.awt.Canvas;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.Dimension;
+
 /**
  *
  * @author wira
  */
 public class VideoFrame extends javax.swing.JFrame {
+
+    CamCanvas canvas1;
 
     /** Creates new form VideoFrame */
     public VideoFrame() {
@@ -32,6 +44,17 @@ public class VideoFrame extends javax.swing.JFrame {
         Global.streamConnection = Global.streamLocator.openConnection();
         Global.streamConnection.setDoInput(true);
         Global.streamConnection.setUseCaches(false);
+
+        canvas1 = new CamCanvas(null);
+        canvas1.setSize(new Dimension(640, 480));
+        
+        this.add(canvas1);
+        canvas1.createBufferStrategy(2);
+
+        this.setSize(new Dimension(660, 500));
+        this.pack();
+
+        (new VideoDisplayThread(canvas1)).start();
 
         } catch(Exception e) {
             System.err.println(this + " exception: " + e);
@@ -70,16 +93,58 @@ public class VideoFrame extends javax.swing.JFrame {
 }
 
 class VideoDisplayThread extends Thread {
+    
+    CamCanvas canvas1;
+
+    public VideoDisplayThread(CamCanvas canvas1) {
+        super();
+
+        this.canvas1 = canvas1;
+    }
+
     @Override
     public void run() {
         try {
 
         while(true) {
-            byte image[] = new byte[Global.streamConnection.getInputStream().read(null)];
+            canvas1.setImage(ImageIO.read(Global.streamLocator));
+            canvas1.refresh();
+            //Thread.sleep(100);
         }
 
+            
         } catch(Exception e) {
             System.err.println(this + " exception: " + e);
         }
     }
 }
+
+class CamCanvas extends Canvas {
+
+    private BufferedImage I;
+
+    public CamCanvas(BufferedImage I) {
+        this.I = I;
+    }
+
+    public void setImage(BufferedImage I) {
+        this.I = I;
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        g.drawImage(I, 0, 0, Color.BLACK, null);
+    }
+
+    public void refresh() {
+        try {
+            Graphics2D g2 = I.createGraphics();
+            g2.drawImage(I, null, null);
+            this.repaint();
+        }
+        catch(Exception e) {
+
+        }
+    }
+}
+
