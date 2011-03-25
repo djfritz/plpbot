@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 	tcgetattr(serialfd, &oldtio);
 	memset(&newtio, 0, sizeof(struct termios));
 
-	newtio.c_cflag = B9600 | CRTSCTS | CS8 | CLOCAL | CREAD;
+	newtio.c_cflag = B57600 | CRTSCTS | CS8 | CLOCAL | CREAD;
 	newtio.c_iflag = IGNPAR | ICRNL;
 	newtio.c_oflag = 0;
 	newtio.c_lflag = ICANON;
