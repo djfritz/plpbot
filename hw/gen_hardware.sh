@@ -8,6 +8,6 @@ cd plpbot_hw
 patch -p1 ../plpbot.patch
 
 cd reference/plp-2.2/hw
-sh scripts/build_500k_linux.sh
+sh scripts/build_1200k_linux.sh
 
 
