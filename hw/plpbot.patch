@@ -1,6 +1,6 @@
 diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf plpbot_hw/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf
---- plp_vanilla/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf	2011-03-17 13:38:43.150770001 -0500
-+++ plpbot_hw/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf	2011-03-25 14:47:36.390762000 -0500
+--- plp_vanilla/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf	2011-04-06 11:45:19.364758001 -0500
 @@ -90,19 +90,7 @@ NET "mod_vga_rgb<7>" LOC = "r8";
  NET "mod_vga_hs" LOC = "t4";
  NET "mod_vga_vs" LOC = "u3";
@@ -22,12 +22,12 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf 
 -NET "mod_gpio_gpio<14>" LOC = "t18";
 -NET "mod_gpio_gpio<15>" LOC = "u18";
 +NET "mod_plpbot_uart_txd_0" LOC = "m15"; /* ja4 */
-+NET "mod_plpbot_uart_txd_1" LOC = "t17"; /* jb4 */
-+NET "mod_plpbot_uart_rxd_1" LOC = "r15"; /* jb3 */
++NET "mod_plpbot_uart_txd_1" LOC = "r15"; /* jb3 */
++NET "mod_plpbot_uart_rxd_1" LOC = "t17"; /* jb4 */
 +
 diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf plpbot_hw/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf
---- plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf	2011-03-17 13:38:43.150770001 -0500
-+++ plpbot_hw/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf	2011-03-25 14:35:08.260761998 -0500
+--- plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf	2011-04-06 11:07:42.574758000 -0500
 @@ -90,19 +90,8 @@ NET "mod_vga_rgb<7>" LOC = "r8";
  NET "mod_vga_hs" LOC = "t4";
  NET "mod_vga_vs" LOC = "u3";
@@ -54,8 +54,8 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf p
 +
 +
 diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plpbot_hw/reference/plp-2.2/hw//verilog/arbiter.v
---- plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v	2011-03-17 13:38:43.150770001 -0500
-+++ plpbot_hw/reference/plp-2.2/hw//verilog/arbiter.v	2011-03-25 14:40:17.370762003 -0500
+--- plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//verilog/arbiter.v	2011-04-06 11:07:42.574758000 -0500
 @@ -17,7 +17,7 @@
   */
  
@@ -162,8 +162,8 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plpbot_hw/referen
 +	/* 11 */mod_plpbot_uart plpbot_uart_t_1	(rst, clk, mod11_ie, mod11_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod11_inst, mod11_data, mod_plpbot_uart_txd_1, mod_plpbot_uart_rxd_1);
  endmodule
 diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/mm.v plpbot_hw/reference/plp-2.2/hw//verilog/mm.v
---- plp_vanilla/reference/plp-2.2/hw//verilog/mm.v	2011-03-17 13:38:43.160770002 -0500
-+++ plpbot_hw/reference/plp-2.2/hw//verilog/mm.v	2011-03-25 15:13:53.810762003 -0500
+--- plp_vanilla/reference/plp-2.2/hw//verilog/mm.v	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//verilog/mm.v	2011-04-06 11:07:42.574758000 -0500
 @@ -55,6 +55,8 @@ module mm(addr, mod, eff_addr);
  		     (addr[31:20] == 12'hf05) ? 7 : /* mod_plpid */
  		     (addr[31:20] == 12'hf06) ? 8 : /* mod_timer */
@@ -175,7 +175,7 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/mm.v plpbot_hw/reference/pl
  endmodule
 diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v plpbot_hw/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v
 --- plp_vanilla/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v	1969-12-31 18:00:00.000000000 -0600
-+++ plpbot_hw/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v	2011-03-25 13:55:22.340762002 -0500
++++ plpbot_hw/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v	2011-04-06 11:07:42.574758000 -0500
 @@ -0,0 +1,207 @@
 +/*
 +    Copyright 2010 David Fritz, Brian Gordon, Wira Mulia
@@ -385,8 +385,8 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v plpbot_hw
 +					 (txd_state == 10) ? out_buffer[7] : 1;
 +endmodule
 diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/top.v plpbot_hw/reference/plp-2.2/hw//verilog/top.v
---- plp_vanilla/reference/plp-2.2/hw//verilog/top.v	2011-03-17 13:38:43.160770002 -0500
-+++ plpbot_hw/reference/plp-2.2/hw//verilog/top.v	2011-03-25 14:40:30.280761992 -0500
+--- plp_vanilla/reference/plp-2.2/hw//verilog/top.v	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//verilog/top.v	2011-04-06 11:07:42.574758000 -0500
 @@ -25,7 +25,7 @@ top level module for mips design
  2.6.2010
  */
