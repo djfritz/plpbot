@@ -24,8 +24,7 @@
 package plpbotcontrol;
 
 import java.net.Socket;
-import java.util.HashSet;
-import java.awt.event.KeyEvent;
+
 
 /**
  *
@@ -33,14 +32,9 @@ import java.awt.event.KeyEvent;
  */
 public class ControlFrame extends javax.swing.JFrame {
 
-    private HashSet<Integer> keyCombo;
-    private int firstKey;
-
     /** Creates new form ControlFrame */
     public ControlFrame() {
         initComponents();
-
-        keyCombo = new HashSet<Integer>();
 
         try {
 
@@ -71,11 +65,20 @@ public class ControlFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         S1 = new javax.swing.JSlider();
         S2 = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         stop = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -97,19 +100,60 @@ public class ControlFrame extends javax.swing.JFrame {
                 stopActionPerformed(evt);
             }
         });
-        stop.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                stopKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                stopKeyReleased(evt);
+
+        jButton2.setText("Forward (E)");
+        jButton2.setPreferredSize(new java.awt.Dimension(97, 97));
+        jButton2.setSize(new java.awt.Dimension(97, 97));
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
+
+        jButton3.setText("Left (S)");
+        jButton3.setPreferredSize(new java.awt.Dimension(97, 97));
+
+        jButton4.setText("Back (D)");
+        jButton4.setPreferredSize(new java.awt.Dimension(97, 97));
+
+        jButton5.setText("Right (F)");
+        jButton5.setPreferredSize(new java.awt.Dimension(97, 97));
+
+        jButton6.setText("45R");
+        jButton6.setToolTipText("45 Degrees Right");
+        jButton6.setPreferredSize(new java.awt.Dimension(45, 97));
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton7.setText("45L");
+        jButton7.setToolTipText("45 Degrees Left");
+        jButton7.setBounds(new java.awt.Rectangle(-32726, -32625, 97, 97));
+        jButton7.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jButton7.setMaximumSize(new java.awt.Dimension(97, 97));
+        jButton7.setPreferredSize(new java.awt.Dimension(45, 97));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(74, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -117,27 +161,42 @@ public class ControlFrame extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(S1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(S1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
+                        .addComponent(stop)
+                        .addGap(62, 62, 62))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(S2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-                        .addComponent(stop)))
-                .addContainerGap())
+                        .addContainerGap(346, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(S1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(S1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(S2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(stop))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(stop)
-                        .addComponent(S2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         pack();
@@ -148,127 +207,26 @@ public class ControlFrame extends javax.swing.JFrame {
         S2.setValue(0);
     }//GEN-LAST:event_stopActionPerformed
 
-    private void stopKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stopKeyPressed
-        keyCombo.add(evt.getKeyCode());
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
-        // a key is pressed
-        if(keyCombo.size() == 1) {
-            firstKey = evt.getKeyCode();
-            switch(evt.getKeyCode()) {
-                case KeyEvent.VK_W:
-                    S1.setValue(63);
-                    S2.setValue(63);
-                    break;
-
-                case KeyEvent.VK_S:
-                    S1.setValue(-63);
-                    S2.setValue(-63);
-                    break;
-
-                case KeyEvent.VK_A:
-                    S1.setValue(-63);
-                    S2.setValue(63);
-                    break;
-
-                case KeyEvent.VK_D:
-                    S1.setValue(63);
-                    S2.setValue(-63);
-                    break;
-            }
-
-        // second key is pressed, adjust for W+A, W+D, and S+A, S+D
-        } else if(keyCombo.size() == 2) { 
-            switch(firstKey) {
-                case KeyEvent.VK_W:
-                    if(evt.getKeyCode() == KeyEvent.VK_A) {
-                        S1.setValue(63 - Global.comboKeyOffset);
-                        S2.setValue(63);
-                    }
-                    else if(evt.getKeyCode() == KeyEvent.VK_D)  {
-                        S1.setValue(63);
-                        S2.setValue(63 - Global.comboKeyOffset);
-                    }
-                    break;
-
-                case KeyEvent.VK_S:
-                    if(evt.getKeyCode() == KeyEvent.VK_A) {
-                        S1.setValue(-63);
-                        S2.setValue(-63 + Global.comboKeyOffset);
-                    }
-                    else if(evt.getKeyCode() == KeyEvent.VK_D)  {
-                        S1.setValue(-63 + Global.comboKeyOffset);
-                        S2.setValue(-63);
-                    }
-                    break;
-
-                case KeyEvent.VK_A:
-                    if(evt.getKeyCode() == KeyEvent.VK_W) {
-                        S1.setValue(63 - Global.comboKeyOffset);
-                        S2.setValue(63);
-                    }
-                    else if(evt.getKeyCode() == KeyEvent.VK_S)  {
-                        S1.setValue(-63);
-                        S2.setValue(-63 + Global.comboKeyOffset);
-                    }
-                    break;
-
-                case KeyEvent.VK_D:
-                    if(evt.getKeyCode() == KeyEvent.VK_W) {
-                        S1.setValue(63);
-                        S2.setValue(63 - Global.comboKeyOffset);
-                    }
-                    else if(evt.getKeyCode() == KeyEvent.VK_S)  {
-                        S1.setValue(-63 + Global.comboKeyOffset);
-                        S2.setValue(-63);
-                    }
-                    break;
-            }
-
-        // if the user presses more than 2 keys, what the hell, ignore
-        // ... button masher ...
-        } else {
-
-        }
-    }//GEN-LAST:event_stopKeyPressed
-
-    private void stopKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stopKeyReleased
-        keyCombo.remove(evt.getKeyCode());
-
-        // if we're down to no key pressed, stop
-        if(keyCombo.isEmpty())
-            stopActionPerformed(null);
-
-        // revert back to one-key-pressed configuration if not
-        if(keyCombo.size() == 1) {
-            switch(firstKey) {
-                case KeyEvent.VK_W:
-                    S1.setValue(63);
-                    S2.setValue(63);
-                    break;
-
-                case KeyEvent.VK_S:
-                    S1.setValue(-63);
-                    S2.setValue(-63);
-                    break;
-
-                case KeyEvent.VK_A:
-                    S1.setValue(-63);
-                    S2.setValue(63);
-                    break;
-
-                case KeyEvent.VK_D:
-                    S1.setValue(63);
-                    S2.setValue(-63);
-                    break;
-            }
-        }
-    }//GEN-LAST:event_stopKeyReleased
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
 
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSlider S1;
     private javax.swing.JSlider S2;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JButton stop;
