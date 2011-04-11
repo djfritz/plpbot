@@ -22,8 +22,8 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf 
 -NET "mod_gpio_gpio<14>" LOC = "t18";
 -NET "mod_gpio_gpio<15>" LOC = "u18";
 +NET "mod_plpbot_uart_txd_0" LOC = "m15"; /* ja4 */
-+NET "mod_plpbot_uart_txd_1" LOC = "r15"; /* jb3 */
-+NET "mod_plpbot_uart_rxd_1" LOC = "t17"; /* jb4 */
++NET "mod_plpbot_uart_txd_1" LOC = "g13"; /* jb3 */
++NET "mod_plpbot_uart_rxd_1" LOC = "h16"; /* jb4 */
 +
 diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf plpbot_hw/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf
 --- plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf	2011-04-06 13:49:21.604757999 -0500
@@ -49,8 +49,8 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf p
 -NET "mod_gpio_gpio<14>" LOC = "t18";
 -NET "mod_gpio_gpio<15>" LOC = "u18";
 +NET "mod_plpbot_uart_txd_0" LOC = "m15"; /* ja4 */
-+NET "mod_plpbot_uart_txd_1" LOC = "t17"; /* jb4 */
-+NET "mod_plpbot_uart_rxd_1" LOC = "r15"; /* jb3 */
++NET "mod_plpbot_uart_txd_1" LOC = "g13"; /* jb3 */
++NET "mod_plpbot_uart_rxd_1" LOC = "h16"; /* jb4 */
 +
 +
 diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plpbot_hw/reference/plp-2.2/hw//verilog/arbiter.v
