@@ -43,8 +43,8 @@ public class Main {
             Global.controlFrame = new ControlFrame();
             Global.controlFrame.setVisible(true);
         }
-        Global.videoFrame = new VideoFrame();
-        Global.videoFrame.setVisible(true);
+        //Global.videoFrame = new VideoFrame();
+        //Global.videoFrame.setVisible(true);
 
         } catch(Exception e) {
             System.err.println("main exception: " + e);

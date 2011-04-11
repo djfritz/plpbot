@@ -1,7 +1,7 @@
-diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf plp/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf
---- plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf	2011-03-17 13:38:43.150770001 -0500
-+++ plp/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf	2011-03-17 13:52:38.160770002 -0500
-@@ -90,19 +90,6 @@ NET "mod_vga_rgb<7>" LOC = "r8";
+diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf plpbot_hw/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf
+--- plp_vanilla/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//build/build_1200k_skeleton/top.ucf	2011-04-06 11:45:19.364758001 -0500
+@@ -90,19 +90,7 @@ NET "mod_vga_rgb<7>" LOC = "r8";
  NET "mod_vga_hs" LOC = "t4";
  NET "mod_vga_vs" LOC = "u3";
  
@@ -21,31 +21,61 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf p
 -NET "mod_gpio_gpio<13>" LOC = "r16";
 -NET "mod_gpio_gpio<14>" LOC = "t18";
 -NET "mod_gpio_gpio<15>" LOC = "u18";
-+NET "mod_plpbot_uart_txd_0" LOC = "l15";
-+NET "mod_plpbot_uart_txd_1" LOC = "k12";
++NET "mod_plpbot_uart_txd_0" LOC = "m15"; /* ja4 */
++NET "mod_plpbot_uart_txd_1" LOC = "g13"; /* jb3 */
++NET "mod_plpbot_uart_rxd_1" LOC = "h16"; /* jb4 */
 +
-diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plp/reference/plp-2.2/hw//verilog/arbiter.v
---- plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v	2011-03-17 13:38:43.150770001 -0500
-+++ plp/reference/plp-2.2/hw//verilog/arbiter.v	2011-03-17 15:20:25.690770002 -0500
+diff -uNrp plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf plpbot_hw/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf
+--- plp_vanilla/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//build/build_500k_skeleton/top.ucf	2011-04-06 11:07:42.574758000 -0500
+@@ -90,19 +90,8 @@ NET "mod_vga_rgb<7>" LOC = "r8";
+ NET "mod_vga_hs" LOC = "t4";
+ NET "mod_vga_vs" LOC = "u3";
+ 
+-NET "mod_gpio_gpio<0>"  LOC = "l15";
+-NET "mod_gpio_gpio<1>"  LOC = "k12";
+-NET "mod_gpio_gpio<2>"  LOC = "l17";
+-NET "mod_gpio_gpio<3>"  LOC = "m15";
+-NET "mod_gpio_gpio<4>"  LOC = "k13";
+-NET "mod_gpio_gpio<5>"  LOC = "l16";
+-NET "mod_gpio_gpio<6>"  LOC = "m14";
+-NET "mod_gpio_gpio<7>"  LOC = "m16";
+-NET "mod_gpio_gpio<8>"  LOC = "m13";
+-NET "mod_gpio_gpio<9>"  LOC = "r18";
+-NET "mod_gpio_gpio<10>" LOC = "r15";
+-NET "mod_gpio_gpio<11>" LOC = "t17";
+-NET "mod_gpio_gpio<12>" LOC = "p17";
+-NET "mod_gpio_gpio<13>" LOC = "r16";
+-NET "mod_gpio_gpio<14>" LOC = "t18";
+-NET "mod_gpio_gpio<15>" LOC = "u18";
++NET "mod_plpbot_uart_txd_0" LOC = "m15"; /* ja4 */
++NET "mod_plpbot_uart_txd_1" LOC = "g13"; /* jb3 */
++NET "mod_plpbot_uart_rxd_1" LOC = "h16"; /* jb4 */
++
++
+diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plpbot_hw/reference/plp-2.2/hw//verilog/arbiter.v
+--- plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//verilog/arbiter.v	2011-04-06 11:07:42.574758000 -0500
 @@ -17,7 +17,7 @@
   */
  
  
 -module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iaddr, bus_cpu_inst, mod_leds_leds, mod_uart_txd, mod_uart_rxd, mod_switches_switches, mod_sseg_an, mod_sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_gpio_gpio);
-+module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iaddr, bus_cpu_inst, mod_leds_leds, mod_uart_txd, mod_uart_rxd, mod_switches_switches, mod_sseg_an, mod_sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_plpbot_uart_txd_0);
++module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iaddr, bus_cpu_inst, mod_leds_leds, mod_uart_txd, mod_uart_rxd, mod_switches_switches, mod_sseg_an, mod_sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1, mod_plpbot_uart_rxd_1);
  	input clk, rst;
  
  	/* cpu i/o */
-@@ -38,7 +38,7 @@ module arbiter(rst, clk, cpu_daddr, cpu_
+@@ -38,7 +38,8 @@ module arbiter(rst, clk, cpu_daddr, cpu_
  	output [23:1] mod_sram_addr;
  	output [7:0] mod_vga_rgb;
  	output mod_vga_hs, mod_vga_vs;
 -	inout [15:0] mod_gpio_gpio;
-+	output mod_plpbot_uart_txd_0;
++	output mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1;
++	input mod_plpbot_uart_rxd_1;
  
  	/* inter-module interconnect */
  	wire [31:0] mod_vga_sram_addr;
-@@ -58,22 +58,22 @@ module arbiter(rst, clk, cpu_daddr, cpu_
+@@ -58,22 +59,24 @@ module arbiter(rst, clk, cpu_daddr, cpu_
  	wire mod2_ie = imod == 2;
  	wire mod3_ie = imod == 3;
  	wire mod4_ie = imod == 4;
@@ -55,6 +85,7 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plp/reference/plp
  	wire mod8_ie = imod == 8;
  	wire mod9_ie = imod == 9;
 +	wire mod10_ie = imod == 10;
++	wire mod11_ie = imod == 11;
  
  	wire mod0_de = dmod == 0;
  	wire mod1_de = dmod == 1;
@@ -67,10 +98,11 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plp/reference/plp
  	wire mod8_de = dmod == 8;
  	wire mod9_de = dmod == 9;
 +	wire mod10_de = dmod == 10;
++	wire mod11_de = dmod == 11;
  
  	/* the bus muxes */
  	wire [31:0] mod0_inst, mod0_data;
-@@ -81,11 +81,11 @@ module arbiter(rst, clk, cpu_daddr, cpu_
+@@ -81,11 +84,12 @@ module arbiter(rst, clk, cpu_daddr, cpu_
  	wire [31:0] mod2_inst, mod2_data;
  	wire [31:0] mod3_inst, mod3_data;
  	wire [31:0] mod4_inst, mod4_data;
@@ -80,10 +112,11 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plp/reference/plp
  	wire [31:0] mod8_inst, mod8_data;
  	wire [31:0] mod9_inst, mod9_data;
 +	wire [31:0] mod10_inst, mod10_data;
++	wire [31:0] mod11_inst, mod11_data;
  
  	assign bus_cpu_inst = 
  		mod0_ie ? mod0_inst :
-@@ -93,11 +93,11 @@ module arbiter(rst, clk, cpu_daddr, cpu_
+@@ -93,11 +97,12 @@ module arbiter(rst, clk, cpu_daddr, cpu_
  		mod2_ie ? mod2_inst :
  		mod3_ie ? mod3_inst :
  		mod4_ie ? mod4_inst :
@@ -93,11 +126,12 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plp/reference/plp
  		mod8_ie ? mod8_inst :
 -		mod9_ie ? mod9_inst : 0;
 +		mod9_ie ? mod9_inst :
-+		mod10_ie ? mod10_inst : 0;
++		mod10_ie ? mod10_inst : 
++		mod11_ie ? mod11_inst : 0;
  
  	assign bus_cpu_data = 
  		mod0_de ? mod0_data :
-@@ -105,11 +105,11 @@ module arbiter(rst, clk, cpu_daddr, cpu_
+@@ -105,11 +110,12 @@ module arbiter(rst, clk, cpu_daddr, cpu_
  		mod2_de ? mod2_data :
  		mod3_de ? mod3_data :
  		mod4_de ? mod4_data :
@@ -107,11 +141,12 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plp/reference/plp
  		mod8_de ? mod8_data :
 -		mod9_de ? mod9_data : 0;
 +		mod9_de ? mod9_data :
-+		mod10_de ? mod10_data : 0;
++		mod10_de ? mod10_data : 
++		mod11_de ? mod11_data : 0;
  
  	/* module instantiations */
  	/* 0 */ mod_rom		rom_t		(rst, clk, mod0_ie, mod0_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod0_inst, mod0_data);
-@@ -117,9 +117,12 @@ module arbiter(rst, clk, cpu_daddr, cpu_
+@@ -117,9 +123,13 @@ module arbiter(rst, clk, cpu_daddr, cpu_
  	/* 2 */ mod_uart	uart_t		(rst, clk, mod2_ie, mod2_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod2_inst, mod2_data, mod_uart_txd, mod_uart_rxd);
  	/* 3 */ mod_switches 	switches_t 	(rst, clk, mod3_ie, mod3_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod3_inst, mod3_data, mod_switches_switches);
  	/* 4 */ mod_leds	leds_t    	(rst, clk, mod4_ie, mod4_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod4_inst, mod4_data, mod_leds_leds);
@@ -124,21 +159,23 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/arbiter.v plp/reference/plp
  	/* 9 */ mod_sseg	sseg_t		(rst, clk, mod9_ie, mod9_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod9_inst, mod9_data, mod_sseg_an, mod_sseg_display);
 +	
 +	/* 10 */mod_plpbot_uart plpbot_uart_t_0	(rst, clk, mod10_ie, mod10_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod10_inst, mod10_data, mod_plpbot_uart_txd_0, 1'b1);
++	/* 11 */mod_plpbot_uart plpbot_uart_t_1	(rst, clk, mod11_ie, mod11_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod11_inst, mod11_data, mod_plpbot_uart_txd_1, mod_plpbot_uart_rxd_1);
  endmodule
-diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/mm.v plp/reference/plp-2.2/hw//verilog/mm.v
---- plp_vanilla/reference/plp-2.2/hw//verilog/mm.v	2011-03-17 13:38:43.160770002 -0500
-+++ plp/reference/plp-2.2/hw//verilog/mm.v	2011-03-17 15:19:36.010770001 -0500
-@@ -55,6 +55,7 @@ module mm(addr, mod, eff_addr);
+diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/mm.v plpbot_hw/reference/plp-2.2/hw//verilog/mm.v
+--- plp_vanilla/reference/plp-2.2/hw//verilog/mm.v	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//verilog/mm.v	2011-04-06 11:07:42.574758000 -0500
+@@ -55,6 +55,8 @@ module mm(addr, mod, eff_addr);
  		     (addr[31:20] == 12'hf05) ? 7 : /* mod_plpid */
  		     (addr[31:20] == 12'hf06) ? 8 : /* mod_timer */
  		     (addr[31:20] == 12'hf0a) ? 9 : /* mod_sseg */
 +		     (addr[31:20] == 12'hf0b) ? 10 : /* plpbot uart 0 */
++		     (addr[31:20] == 12'hf0c) ? 11 : /* plpbot uart 0 */
  		     0;
  	assign eff_addr = (mod == 8'h01) ? {8'h00,addr[23:0]} : {12'h000,addr[19:0]};
  endmodule
-diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v plp/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v
+diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v plpbot_hw/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v
 --- plp_vanilla/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v	1969-12-31 18:00:00.000000000 -0600
-+++ plp/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v	2011-03-17 13:42:27.150770009 -0500
++++ plpbot_hw/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v	2011-04-06 11:07:42.574758000 -0500
 @@ -0,0 +1,207 @@
 +/*
 +    Copyright 2010 David Fritz, Brian Gordon, Wira Mulia
@@ -347,33 +384,34 @@ diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/mod_plpbot_uart.v plp/refer
 +					 (txd_state == 9) ? out_buffer[6] : 
 +					 (txd_state == 10) ? out_buffer[7] : 1;
 +endmodule
-diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/top.v plp/reference/plp-2.2/hw//verilog/top.v
---- plp_vanilla/reference/plp-2.2/hw//verilog/top.v	2011-03-17 13:38:43.160770002 -0500
-+++ plp/reference/plp-2.2/hw//verilog/top.v	2011-03-17 15:20:49.800770000 -0500
+diff -uNrp plp_vanilla/reference/plp-2.2/hw//verilog/top.v plpbot_hw/reference/plp-2.2/hw//verilog/top.v
+--- plp_vanilla/reference/plp-2.2/hw//verilog/top.v	2011-04-06 13:49:21.604757999 -0500
++++ plpbot_hw/reference/plp-2.2/hw//verilog/top.v	2011-04-06 11:07:42.574758000 -0500
 @@ -25,7 +25,7 @@ top level module for mips design
  2.6.2010
  */
  
 -module top(clk,leds,rst,txd,rxd,switches,sseg_an,sseg_display, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_gpio_gpio);
-+module top(clk,leds,rst,txd,rxd,switches,sseg_an,sseg_display, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_plpbot_uart_txd_0);
++module top(clk,leds,rst,txd,rxd,switches,sseg_an,sseg_display, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1, mod_plpbot_uart_rxd_1);
  	input clk;
  	output [7:0] leds;
  	input rst,rxd;
-@@ -38,7 +38,7 @@ module top(clk,leds,rst,txd,rxd,switches
+@@ -38,7 +38,8 @@ module top(clk,leds,rst,txd,rxd,switches
  	output [23:1] mod_sram_addr;	
  	output [7:0] mod_vga_rgb;
  	output mod_vga_hs, mod_vga_vs;
 -	inout [15:0] mod_gpio_gpio;
-+	output mod_plpbot_uart_txd_0;
++	output mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1;
++	input mod_plpbot_uart_rxd_1;
  
  	wire [31:0] daddr, dout, din, iaddr, iin;
  	wire drw;
-@@ -46,7 +46,7 @@ module top(clk,leds,rst,txd,rxd,switches
+@@ -46,7 +47,7 @@ module top(clk,leds,rst,txd,rxd,switches
  
  	clock c_t(clk, c);
  	cpu cpu_t(rst, c, cpu_stall, daddr, dout, din, drw, iaddr, iin);
 -        arbiter arbiter_t(rst, c, daddr, dout, din, drw, iaddr, iin, leds, txd, rxd, switches, sseg_an, sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_gpio_gpio);
-+        arbiter arbiter_t(rst, c, daddr, dout, din, drw, iaddr, iin, leds, txd, rxd, switches, sseg_an, sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_plpbot_uart_txd_0);
++        arbiter arbiter_t(rst, c, daddr, dout, din, drw, iaddr, iin, leds, txd, rxd, switches, sseg_an, sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1, mod_plpbot_uart_rxd_1);
  endmodule
  	
  
