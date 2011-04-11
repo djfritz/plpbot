@@ -107,7 +107,7 @@ class GrabberThread extends Thread {
         }catch (Exception e) {
             Global.streamFrame = null;
             System.err.println("grabber exception: " + e);
-            System.exit(-1);
+            //System.exit(-1);
         }
     }
 }
@@ -133,7 +133,7 @@ class VideoDisplayThread extends Thread {
             
         } catch(Exception e) {
             System.err.println("painter exception: " + e);
-            System.exit(-1);
+            //System.exit(-1);
         }
     }
 }

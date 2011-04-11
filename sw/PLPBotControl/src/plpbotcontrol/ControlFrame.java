@@ -24,6 +24,8 @@
 package plpbotcontrol;
 
 import java.net.Socket;
+import java.util.HashSet;
+import java.awt.event.KeyEvent;
 
 /**
  *
@@ -31,9 +33,14 @@ import java.net.Socket;
  */
 public class ControlFrame extends javax.swing.JFrame {
 
+    private HashSet<Integer> keyCombo;
+    private int firstKey;
+
     /** Creates new form ControlFrame */
     public ControlFrame() {
         initComponents();
+
+        keyCombo = new HashSet<Integer>();
 
         try {
 
@@ -90,6 +97,14 @@ public class ControlFrame extends javax.swing.JFrame {
                 stopActionPerformed(evt);
             }
         });
+        stop.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                stopKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                stopKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,6 +147,122 @@ public class ControlFrame extends javax.swing.JFrame {
         S1.setValue(0);
         S2.setValue(0);
     }//GEN-LAST:event_stopActionPerformed
+
+    private void stopKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stopKeyPressed
+        keyCombo.add(evt.getKeyCode());
+
+        // a key is pressed
+        if(keyCombo.size() == 1) {
+            firstKey = evt.getKeyCode();
+            switch(evt.getKeyCode()) {
+                case KeyEvent.VK_W:
+                    S1.setValue(63);
+                    S2.setValue(63);
+                    break;
+
+                case KeyEvent.VK_S:
+                    S1.setValue(-63);
+                    S2.setValue(-63);
+                    break;
+
+                case KeyEvent.VK_A:
+                    S1.setValue(-63);
+                    S2.setValue(63);
+                    break;
+
+                case KeyEvent.VK_D:
+                    S1.setValue(63);
+                    S2.setValue(-63);
+                    break;
+            }
+
+        // second key is pressed, adjust for W+A, W+D, and S+A, S+D
+        } else if(keyCombo.size() == 2) { 
+            switch(firstKey) {
+                case KeyEvent.VK_W:
+                    if(evt.getKeyCode() == KeyEvent.VK_A) {
+                        S1.setValue(63 - Global.comboKeyOffset);
+                        S2.setValue(63);
+                    }
+                    else if(evt.getKeyCode() == KeyEvent.VK_D)  {
+                        S1.setValue(63);
+                        S2.setValue(63 - Global.comboKeyOffset);
+                    }
+                    break;
+
+                case KeyEvent.VK_S:
+                    if(evt.getKeyCode() == KeyEvent.VK_A) {
+                        S1.setValue(-63);
+                        S2.setValue(-63 + Global.comboKeyOffset);
+                    }
+                    else if(evt.getKeyCode() == KeyEvent.VK_D)  {
+                        S1.setValue(-63 + Global.comboKeyOffset);
+                        S2.setValue(-63);
+                    }
+                    break;
+
+                case KeyEvent.VK_A:
+                    if(evt.getKeyCode() == KeyEvent.VK_W) {
+                        S1.setValue(63 - Global.comboKeyOffset);
+                        S2.setValue(63);
+                    }
+                    else if(evt.getKeyCode() == KeyEvent.VK_S)  {
+                        S1.setValue(-63);
+                        S2.setValue(-63 + Global.comboKeyOffset);
+                    }
+                    break;
+
+                case KeyEvent.VK_D:
+                    if(evt.getKeyCode() == KeyEvent.VK_W) {
+                        S1.setValue(63);
+                        S2.setValue(63 - Global.comboKeyOffset);
+                    }
+                    else if(evt.getKeyCode() == KeyEvent.VK_S)  {
+                        S1.setValue(-63 + Global.comboKeyOffset);
+                        S2.setValue(-63);
+                    }
+                    break;
+            }
+
+        // if the user presses more than 2 keys, what the hell, ignore
+        // ... button masher ...
+        } else {
+
+        }
+    }//GEN-LAST:event_stopKeyPressed
+
+    private void stopKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stopKeyReleased
+        keyCombo.remove(evt.getKeyCode());
+
+        // if we're down to no key pressed, stop
+        if(keyCombo.isEmpty())
+            stopActionPerformed(null);
+
+        // revert back to one-key-pressed configuration if not
+        if(keyCombo.size() == 1) {
+            switch(firstKey) {
+                case KeyEvent.VK_W:
+                    S1.setValue(63);
+                    S2.setValue(63);
+                    break;
+
+                case KeyEvent.VK_S:
+                    S1.setValue(-63);
+                    S2.setValue(-63);
+                    break;
+
+                case KeyEvent.VK_A:
+                    S1.setValue(-63);
+                    S2.setValue(63);
+                    break;
+
+                case KeyEvent.VK_D:
+                    S1.setValue(63);
+                    S2.setValue(-63);
+                    break;
+            }
+        }
+    }//GEN-LAST:event_stopKeyReleased
 
 
 

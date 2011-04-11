@@ -41,4 +41,6 @@ public class Global {
     public static int           grabberRate = 1;
     public static int           painterRate = 1;
     public static int           senderRate = 50;
+
+    public static int           comboKeyOffset = 40;
 }
