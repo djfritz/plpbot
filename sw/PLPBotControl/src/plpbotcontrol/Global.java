@@ -29,6 +29,7 @@ import java.awt.Image;
 public class Global {
     public static VideoFrame    videoFrame;
     public static ControlFrame  controlFrame;
+    public static ControlFrameWira  controlFrameWira;
     public static Socket        baseStation;
     public static URL           streamLocator;
     public static URLConnection streamConnection;

@@ -31,13 +31,13 @@ import java.awt.event.KeyEvent;
  *
  * @author wira
  */
-public class ControlFrameWira extends javax.swing.JFrame {
+public class ControlFrame extends javax.swing.JFrame {
 
     private HashSet<Integer> keyCombo;
     private int firstKey;
 
     /** Creates new form ControlFrame */
-    public ControlFrameWira() {
+    public ControlFrame() {
         initComponents();
 
         keyCombo = new HashSet<Integer>();
@@ -46,7 +46,7 @@ public class ControlFrameWira extends javax.swing.JFrame {
 
         Global.baseStation = new Socket(Global.baseStationHost, Global.baseStationPort);
 
-        (new SenderThreadWira()).start();
+        (new SenderThread()).start();
 
         } catch(Exception e) {
             System.err.println("control frame exception: " + e);
@@ -71,14 +71,11 @@ public class ControlFrameWira extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
         S1 = new javax.swing.JSlider();
         S2 = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         stop = new javax.swing.JButton();
-
-        jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -121,27 +118,25 @@ public class ControlFrameWira extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(S1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(S2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
-                .addComponent(stop)
-                .addGap(83, 83, 83))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(S2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                        .addComponent(stop)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(S1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(S2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(stop)))
+                    .addComponent(jLabel1)
+                    .addComponent(S1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(stop)
+                        .addComponent(S2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -274,7 +269,6 @@ public class ControlFrameWira extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSlider S1;
     private javax.swing.JSlider S2;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JButton stop;
@@ -282,16 +276,15 @@ public class ControlFrameWira extends javax.swing.JFrame {
 
 }
 
-
-class SenderThreadWira extends Thread {
+class SenderThread extends Thread {
     @Override
     public void run() {
         try {
 
         while(true) {
             Global.baseStation.getOutputStream().write(0x7F);
-            Global.baseStation.getOutputStream().write(Global.controlFrameWira.getS1Value() + 64);
-            Global.baseStation.getOutputStream().write(Global.controlFrameWira.getS2Value() + 192);
+            Global.baseStation.getOutputStream().write(Global.controlFrame.getS1Value() + 64);
+            Global.baseStation.getOutputStream().write(Global.controlFrame.getS2Value() + 192);
             Thread.sleep(Global.senderRate);
         }
 
