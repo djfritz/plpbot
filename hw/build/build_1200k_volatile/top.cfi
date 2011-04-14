@@ -1,0 +1,11 @@
+# PROMGEN: Xilinx Prom Generator M.81d
+# Copyright (c) 1995-2010 Xilinx, Inc.  All rights reserved.
+
+SOFTWARE_VERSION M.81d
+DATE             4/14/2011 - 13:48
+SOURCE          top.mcs
+DEVICE          XCF04S
+DATA_WIDTH      8
+FILL_DATA       0xFF
+SIGNATURE       0x00FBBDD6
+START_ADDRESS   0x00000000 END_ADDRESS 0x00075393 DIRECTION_UP   "top.bit" 3s1200efg320

@@ -1,0 +1,8 @@
+INTSTYLE=xflow
+INFILE=/home/fritz/plpbot2/hw/build/build_1200k_volatile/top.ncd
+OUTFILE=/home/fritz/plpbot2/hw/build/build_1200k_volatile/top.bit
+FAMILY=Spartan3E
+PART=xc3s1200e-4fg320
+WORKINGDIR=/home/fritz/plpbot2/hw/build/build_1200k_volatile
+LICENSE=WebPack
+USER_INFO=0_0_810
