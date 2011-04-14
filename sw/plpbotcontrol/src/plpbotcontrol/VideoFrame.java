@@ -28,13 +28,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JComponent;
 
+import uk.co.caprica.vlcj.player.MediaPlayerFactory;
+import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+
+import uk.co.caprica.vlcj.test.minimal.MinimalTestPlayer;
+
 /**
  *
  * @author wira
  */
 public class VideoFrame extends javax.swing.JFrame {
 
-    CamCanvas canvas1;
+    //CamCanvas canvas1;
+    Canvas canvas1;
+    uk.co.caprica.vlcj.player.MediaPlayer vlcPlayer;
 
     /** Creates new form VideoFrame */
     public VideoFrame() {
@@ -42,21 +50,32 @@ public class VideoFrame extends javax.swing.JFrame {
 
         initComponents();
 
-        Global.streamConnection = Global.streamLocator.openConnection();
-        Global.streamConnection.setDoInput(true);
-        Global.streamConnection.setUseCaches(false);
+        //Global.streamConnection = Global.streamLocator.openConnection();
+        //Global.streamConnection.setDoInput(true);
+        //Global.streamConnection.setUseCaches(false);
 
-        canvas1 = new CamCanvas(null);
+        //canvas1 = new CamCanvas(null);
+        canvas1 = new Canvas(null);
         canvas1.setSize(new Dimension(640, 480));
-        
+
+
         this.add(canvas1);
         //canvas1.createBufferStrategy(2);
 
         this.setSize(new Dimension(canvas1.getWidth(), canvas1.getHeight()));
         this.pack();
 
-        (new VideoDisplayThread(canvas1)).start();
-        (new GrabberThread()).start();
+        MediaPlayerFactory factory = new MediaPlayerFactory();
+
+        EmbeddedMediaPlayer mediaPlayer = factory.newMediaPlayer(null);
+        mediaPlayer.setVideoSurface(canvas1);
+
+        mediaPlayer.setStandardMediaOptions("http-caching=0");
+        mediaPlayer.playMedia("" + Global.streamLocator);
+        
+
+        //(new VideoDisplayThread(canvas1)).start();
+        //(new GrabberThread()).start();
 
         } catch(Exception e) {
             System.err.println("video frame exception: " + e);
@@ -100,7 +119,7 @@ class GrabberThread extends Thread {
         try {
             
         while(true) {
-            Global.streamFrame = ImageIO.read(Global.streamLocator);
+            //Global.streamFrame = ImageIO.read(Global.streamLocator);
             Thread.sleep(Global.grabberRate);
         }
 
@@ -111,7 +130,7 @@ class GrabberThread extends Thread {
         }
     }
 }
-
+/*
 class VideoDisplayThread extends Thread {
     
     CamCanvas canvas1;
@@ -137,7 +156,7 @@ class VideoDisplayThread extends Thread {
         }
     }
 }
-
+/*
 class CamCanvas extends JComponent {
 
     private BufferedImage I;
@@ -180,5 +199,5 @@ class CamCanvas extends JComponent {
     public void refresh() {
         this.repaint();
     }
-}
+}*/
 
