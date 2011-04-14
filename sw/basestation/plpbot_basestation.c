@@ -18,6 +18,7 @@ The software listens on the official plpbot server port, 1337.
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <errno.h>
+#include <sys/time.h>
 
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -30,6 +31,8 @@ struct plpbot_packet {
 };
 
 #define PORT 1337
+
+static suseconds_t old_time;
 
 void handle_packet(struct plpbot_packet p, int serialfd) {
 	if (p.startbyte != 0x7f) {
@@ -107,7 +110,14 @@ int main(int argc, char *argv[]) {
 
 		/* grab data */
 		while (size = recv(newsockfd, &p, sizeof(struct plpbot_packet), MSG_WAITALL) == sizeof(struct plpbot_packet)) {
-			printf("[i] %x, %d, %d\n", p.startbyte, p.left_motor, p.right_motor);
+			
+			struct timeval tv;
+			gettimeofday(&tv,NULL);
+
+			printf("[i] %x, %d, %d, %d ms\n", p.startbyte, p.left_motor, p.right_motor, (tv.tv_usec - old_time)/1000);
+			
+			old_time = tv.tv_usec;			
+
 			handle_packet(p,serialfd);
 		}
 
