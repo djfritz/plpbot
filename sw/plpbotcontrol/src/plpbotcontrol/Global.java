@@ -31,7 +31,7 @@ public class Global {
     public static ControlFrame  controlFrame;
     public static ControlFrameWira  controlFrameWira;
     public static Socket        baseStation;
-    public static URL           streamLocator;
+    public static String        streamLocator;
     public static URLConnection streamConnection;
     public static Image         streamFrame;
     public static String        baseStationHost;
@@ -39,9 +39,9 @@ public class Global {
 
     public static int           buffers = 10;
 
-    public static int           grabberRate = 1;
-    public static int           painterRate = 1;
+    public static int           grabberRate = 0;
+    public static int           painterRate = 0;
     public static int           senderRate = 50;
 
-    public static int           comboKeyOffset = 40;
+    public static int           comboKeyOffset = 30;
 }

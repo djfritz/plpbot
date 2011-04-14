@@ -36,7 +36,7 @@ public class Main {
             return;
         }
 
-        Global.streamLocator = new java.net.URL("http://" + args[0] + "/axis-cgi/jpg/image.cgi");
+        Global.streamLocator = "http://" + args[0] + "/axis-cgi/mjpg/video.cgi";
         if(args.length >= 3) {
             Global.baseStationHost = args[1];
             Global.baseStationPort = Integer.parseInt(args[2]);
