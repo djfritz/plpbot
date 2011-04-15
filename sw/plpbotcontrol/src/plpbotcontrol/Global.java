@@ -44,4 +44,5 @@ public class Global {
     public static int           senderRate = 50;
 
     public static int           comboKeyOffset = 30;
+    public static int           turnOffsetIncrement = 10;
 }

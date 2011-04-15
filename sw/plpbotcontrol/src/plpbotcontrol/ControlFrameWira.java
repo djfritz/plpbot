@@ -179,8 +179,22 @@ public class ControlFrameWira extends javax.swing.JFrame {
     private void stopKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stopKeyPressed
         keyCombo.add(evt.getKeyCode());
 
+        // adjust turn offset, independent of other keys
+        if(evt.getKeyCode() == KeyEvent.VK_Q) {
+            if((comboOffset.getValue() - Global.turnOffsetIncrement) >= 0)
+                comboOffset.setValue(comboOffset.getValue() - Global.turnOffsetIncrement);
+            else
+                comboOffset.setValue(0);
+        }
+        else if(evt.getKeyCode() == KeyEvent.VK_E) {
+            if((comboOffset.getValue() + Global.turnOffsetIncrement) <= comboOffset.getMaximum())
+                comboOffset.setValue(comboOffset.getValue() + Global.turnOffsetIncrement);
+            else
+                comboOffset.setValue(comboOffset.getMaximum());
+        }
+
         // a key is pressed
-        if(keyCombo.size() == 1) {
+        else if(keyCombo.size() == 1) {
             firstKey = evt.getKeyCode();
             switch(evt.getKeyCode()) {
                 case KeyEvent.VK_W:
