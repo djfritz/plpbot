@@ -35,7 +35,11 @@ memory map module
 0xf0400000	8		VGA
 0xf0500000      8               PLPID
 0xf0600000      4               timer
+0xf0700000      8               interrupt controller
+0xf0800000 	?		pmc hardware
 0xf0a00000	4		sseg
+0xf0b00000	16		xbee_uart
+0xf0c00000	16		motor_uart
 */
 
 
@@ -54,9 +58,11 @@ module mm(addr, mod, eff_addr);
 		     (addr[31:20] == 12'hf04) ? 6 : /* mod_vga */
 		     (addr[31:20] == 12'hf05) ? 7 : /* mod_plpid */
 		     (addr[31:20] == 12'hf06) ? 8 : /* mod_timer */
+		     (addr[31:20] == 12'hf07) ? 10 : /* mod_interrupt */
+		     (addr[31:20] == 12'hf08) ? 11 : /* mod_pmc */
 		     (addr[31:20] == 12'hf0a) ? 9 : /* mod_sseg */
-		     (addr[31:20] == 12'hf0b) ? 10 : /* plpbot uart 0 */
-		     (addr[31:20] == 12'hf0c) ? 11 : /* plpbot uart 0 */
+		     (addr[31:20] == 12'hf0b) ? 12 : /* mod_pmc */
+		     (addr[31:20] == 12'hf0c) ? 13 : /* mod_sseg */
 		     0;
 	assign eff_addr = (mod == 8'h01) ? {8'h00,addr[23:0]} : {12'h000,addr[19:0]};
 endmodule

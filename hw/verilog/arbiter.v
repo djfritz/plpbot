@@ -17,11 +17,12 @@
  */
 
 
-module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iaddr, bus_cpu_inst, mod_leds_leds, mod_uart_txd, mod_uart_rxd, mod_switches_switches, mod_sseg_an, mod_sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1, mod_plpbot_uart_rxd_1);
-	input clk, rst;
+module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iaddr, bus_cpu_inst, int, int_ack, mod_leds_leds, mod_uart_txd, mod_uart_rxd, mod_switches_switches, mod_sseg_an, mod_sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_gpio_gpio, i_button, mod_xbee_uart_rxd, mod_xbee_uart_txd, mod_motor_uart_txd);
+	input clk, rst, int_ack;
+	output int; 
 
 	/* cpu i/o */
-	input cpu_drw; /* data read/write. cpu_drw = 0 is read */
+	input [1:0] cpu_drw; /* data read/write. cpu_drw = 00 is nop, 01 is write, 10 is read */
 	input [31:0] cpu_daddr, cpu_iaddr; /* word aligned */
 	input [31:0] cpu_bus_data; /* cpu data coming from the cpu */
 	output [31:0] bus_cpu_data, bus_cpu_inst; /* cpu data going to the cpu */
@@ -38,14 +39,26 @@ module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iad
 	output [23:1] mod_sram_addr;
 	output [7:0] mod_vga_rgb;
 	output mod_vga_hs, mod_vga_vs;
-	output mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1;
-	input mod_plpbot_uart_rxd_1;
+	inout [15:0] mod_gpio_gpio;
+	input i_button;
+	
+	/* plpbot */
+	input mod_xbee_uart_rxd;
+	output mod_xbee_uart_txd, mod_motor_uart_txd;
+	wire i_xbee_uart;
+
 
 	/* inter-module interconnect */
 	wire [31:0] mod_vga_sram_addr;
 	wire [31:0] mod_vga_sram_data;
 	wire mod_vga_sram_read;
 	wire mod_vga_sram_rdy;
+
+	/* interrupt interconnect */
+	wire i_timer, i_uart;
+
+	/* pmc hardware interconnect */
+	wire pmc_cache_miss_I, pmc_cache_miss_D, pmc_cache_access_I, pmc_cache_access_D, pmc_uart_recv, pmc_uart_send;
 
 	/* effective address calculation for the modules */
 	wire [7:0] imod, dmod;
@@ -59,24 +72,30 @@ module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iad
 	wire mod2_ie = imod == 2;
 	wire mod3_ie = imod == 3;
 	wire mod4_ie = imod == 4;
+	wire mod5_ie = imod == 5;
 	wire mod6_ie = imod == 6;
 	wire mod7_ie = imod == 7;
 	wire mod8_ie = imod == 8;
 	wire mod9_ie = imod == 9;
-	wire mod10_ie = imod == 10;
-	wire mod11_ie = imod == 11;
+	wire modA_ie = imod == 10;
+	wire modB_ie = imod == 11;
+	wire modC_ie = imod == 12;
+	wire modD_ie = imod == 13;
 
 	wire mod0_de = dmod == 0;
 	wire mod1_de = dmod == 1;
 	wire mod2_de = dmod == 2;
 	wire mod3_de = dmod == 3;
 	wire mod4_de = dmod == 4;
+	wire mod5_de = dmod == 5;
 	wire mod6_de = dmod == 6;
 	wire mod7_de = dmod == 7;
 	wire mod8_de = dmod == 8;
 	wire mod9_de = dmod == 9;
-	wire mod10_de = dmod == 10;
-	wire mod11_de = dmod == 11;
+	wire modA_de = dmod == 10;
+	wire modB_de = dmod == 11;
+	wire modC_de = dmod == 12;
+	wire modD_de = dmod == 13;
 
 	/* the bus muxes */
 	wire [31:0] mod0_inst, mod0_data;
@@ -84,12 +103,15 @@ module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iad
 	wire [31:0] mod2_inst, mod2_data;
 	wire [31:0] mod3_inst, mod3_data;
 	wire [31:0] mod4_inst, mod4_data;
+	wire [31:0] mod5_inst, mod5_data;
 	wire [31:0] mod6_inst, mod6_data;
 	wire [31:0] mod7_inst, mod7_data;
 	wire [31:0] mod8_inst, mod8_data;
 	wire [31:0] mod9_inst, mod9_data;
-	wire [31:0] mod10_inst, mod10_data;
-	wire [31:0] mod11_inst, mod11_data;
+	wire [31:0] modA_inst, modA_data;
+	wire [31:0] modB_inst, modB_data;
+	wire [31:0] modC_inst, modC_data;
+	wire [31:0] modD_inst, modD_data;
 
 	assign bus_cpu_inst = 
 		mod0_ie ? mod0_inst :
@@ -97,12 +119,15 @@ module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iad
 		mod2_ie ? mod2_inst :
 		mod3_ie ? mod3_inst :
 		mod4_ie ? mod4_inst :
+		mod5_ie ? mod5_inst :
 		mod6_ie ? mod6_inst :
 		mod7_ie ? mod7_inst :
 		mod8_ie ? mod8_inst :
-		mod9_ie ? mod9_inst :
-		mod10_ie ? mod10_inst : 
-		mod11_ie ? mod11_inst : 0;
+		mod9_ie ? mod9_inst : 
+		modA_ie ? modA_inst : 
+		modB_ie ? modB_inst : 
+		modC_ie ? modC_inst :
+		modD_ie ? modD_inst : 0;
 
 	assign bus_cpu_data = 
 		mod0_de ? mod0_data :
@@ -110,26 +135,29 @@ module arbiter(rst, clk, cpu_daddr, cpu_bus_data, bus_cpu_data, cpu_drw, cpu_iad
 		mod2_de ? mod2_data :
 		mod3_de ? mod3_data :
 		mod4_de ? mod4_data :
+		mod5_de ? mod5_data :
 		mod6_de ? mod6_data :
 		mod7_de ? mod7_data :
 		mod8_de ? mod8_data :
-		mod9_de ? mod9_data :
-		mod10_de ? mod10_data : 
-		mod11_de ? mod11_data : 0;
+		mod9_de ? mod9_data : 
+		modA_de ? modA_data : 
+		modB_de ? modB_data : 
+		modC_de ? modC_data :
+		modD_de ? modD_data : 0;
 
 	/* module instantiations */
 	/* 0 */ mod_rom		rom_t		(rst, clk, mod0_ie, mod0_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod0_inst, mod0_data);
-	/* 1 */ mod_sram	ram_t		(rst, clk, mod1_ie, mod1_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod1_inst, mod1_data, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_sram_data, mod_vga_sram_addr, mod_vga_sram_read, mod_vga_sram_rdy);
-	/* 2 */ mod_uart	uart_t		(rst, clk, mod2_ie, mod2_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod2_inst, mod2_data, mod_uart_txd, mod_uart_rxd);
+	/* 1 */ mod_memory_hierarchy	ram_t		(rst, clk, mod1_ie, mod1_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod1_inst, mod1_data, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_sram_data, mod_vga_sram_addr, mod_vga_sram_read, mod_vga_sram_rdy, pmc_cache_miss_I, pmc_cache_miss_D, pmc_cache_access_I, pmc_cache_access_D);
+	/* 2 */ mod_uart	uart_t		(rst, clk, mod2_ie, mod2_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod2_inst, mod2_data, mod_uart_txd, mod_uart_rxd, i_uart, pmc_uart_recv, pmc_uart_send);
 	/* 3 */ mod_switches 	switches_t 	(rst, clk, mod3_ie, mod3_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod3_inst, mod3_data, mod_switches_switches);
 	/* 4 */ mod_leds	leds_t    	(rst, clk, mod4_ie, mod4_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod4_inst, mod4_data, mod_leds_leds);
-	
-
+	/* 5 */ mod_gpio	gpio_t		(rst, clk, mod5_ie, mod5_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod5_inst, mod5_data, mod_gpio_gpio);
 	/* 6 */ mod_vga		vga_t		(rst, clk, mod6_ie, mod6_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod6_inst, mod6_data, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_vga_sram_data, mod_vga_sram_addr, mod_vga_sram_read, mod_vga_sram_rdy);
 	/* 7 */ mod_plpid	plpid_t   	(rst, clk, mod7_ie, mod7_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod7_inst, mod7_data);
-	/* 8 */ mod_timer	timer_t	  	(rst, clk, mod8_ie, mod8_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod8_inst, mod8_data);
+	/* 8 */ mod_timer	timer_t	  	(rst, clk, mod8_ie, mod8_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod8_inst, mod8_data, i_timer);
 	/* 9 */ mod_sseg	sseg_t		(rst, clk, mod9_ie, mod9_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod9_inst, mod9_data, mod_sseg_an, mod_sseg_display);
-	
-	/* 10 */mod_plpbot_uart plpbot_uart_t_0	(rst, clk, mod10_ie, mod10_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod10_inst, mod10_data, mod_plpbot_uart_txd_0, 1'b1);
-	/* 11 */mod_plpbot_uart plpbot_uart_t_1	(rst, clk, mod11_ie, mod11_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, mod11_inst, mod11_data, mod_plpbot_uart_txd_1, mod_plpbot_uart_rxd_1);
+	/* 10 */mod_interrupt	interrupt_t	(rst, clk, modA_ie, modA_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, modA_inst, modA_data, int, int_ack, i_timer, i_uart, i_button, i_xbee_uart);
+	/* 11 */mod_pmc		pmc_t		(rst, clk, modB_ie, modB_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, modB_inst, modB_data, int, pmc_cache_miss_I, pmc_cache_miss_D, pmc_cache_access_I, pmc_cache_access_D, pmc_uart_recv, pmc_uart_send);
+	/* 12 */ mod_plpbot_uart	xbee_uart_t	(rst, clk, modC_ie, modC_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, modC_inst, modC_data, mod_xbee_uart_txd, mod_xbee_uart_rxd, i_xbee_uart, , );
+	/* 13 */ mod_plpbot_uart	motor_uart_t	(rst, clk, modD_ie, modD_de, ieff_addr, deff_addr, cpu_drw, cpu_bus_data, modD_inst, modD_data, mod_motor_uart_txd,,,,);
 endmodule

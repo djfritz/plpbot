@@ -31,7 +31,7 @@ module mod_plpid(rst, clk, ie, de, iaddr, daddr, drw, din, iout, dout);
         input clk;
         input ie,de;
         input [31:0] iaddr, daddr;
-        input drw;
+        input [1:0] drw;
         input [31:0] din;
         output [31:0] iout, dout;
 
@@ -40,7 +40,7 @@ module mod_plpid(rst, clk, ie, de, iaddr, daddr, drw, din, iout, dout);
         assign iout = idata;
         assign dout = ddata;
 
-	parameter cpu_id = 32'h00000202;
+	parameter cpu_id = 32'h00000303;
 	parameter board_freq = 32'h017d7840;	/* 25 mhz */
 
 	assign ddata = (daddr == 0) ? cpu_id :

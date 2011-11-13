@@ -90,7 +90,26 @@ NET "mod_vga_rgb<7>" LOC = "r8";
 NET "mod_vga_hs" LOC = "t4";
 NET "mod_vga_vs" LOC = "u3";
 
-NET "mod_plpbot_uart_txd_0" LOC = "m15"; /* ja4 */
-NET "mod_plpbot_uart_txd_1" LOC = "g13"; /* jb3 */
-NET "mod_plpbot_uart_rxd_1" LOC = "h16"; /* jb4 */
+NET "mod_gpio_gpio<0>"  LOC = "l15";
+NET "mod_gpio_gpio<1>"  LOC = "k12";
+NET "mod_gpio_gpio<2>"  LOC = "l17";
+NET "mod_gpio_gpio<3>"  LOC = "m15";
+NET "mod_gpio_gpio<4>"  LOC = "k13";
+NET "mod_gpio_gpio<5>"  LOC = "l16";
+NET "mod_gpio_gpio<6>"  LOC = "m14";
+NET "mod_gpio_gpio<7>"  LOC = "m16";
+NET "mod_gpio_gpio<8>"  LOC = "m13";
+NET "mod_gpio_gpio<9>"  LOC = "r18";
+NET "mod_gpio_gpio<10>" LOC = "r15";
+NET "mod_gpio_gpio<11>" LOC = "t17";
+NET "mod_gpio_gpio<12>" LOC = "p17";
+NET "mod_gpio_gpio<13>" LOC = "r16";
+NET "mod_gpio_gpio<14>" LOC = "t18";
+NET "mod_gpio_gpio<15>" LOC = "u18";
+
+NET "i_button" LOC = "H13";
+
+NET "mod_xbee_uart_txd" LOC = "g16";
+NET "mod_xbee_uart_rxd" LOC = "j12";
+NET "mod_motor_uart_txd" LOC = "h16";
 

@@ -3,14 +3,14 @@
 import pygame
 from pygame.locals import *
 import time
-import vlc
+#import vlc
 import sys
 import threading
 import socket
 
 #vlc initialization
-p=vlc.MediaPlayer('./sample_mpeg4.mp4')
-p.play()
+#p=vlc.MediaPlayer('./sample_mpeg4.mp4')
+#p.play()
 
 #command window
 black = (0,0,0)
