@@ -10,20 +10,13 @@ j startup
 nop
 
 fritz_propaganda:
-	.asciiz "doubleplusungood"
+	.asciiz "You great star, what would your happiness be had you not those for whom you shine?"
 version_string:
-	.asciiz "plp2.2"
+	.asciiz "plp-3.3"
 memory_test:
 	.asciiz "starting memory test..."
 memory_done:
 	.asciiz "done."
-
-.include ../../sw/libplp/libplp_timer.asm
-.include ../../sw/libplp/libplp_leds.asm
-.include ../../sw/libplp/libplp_plpid.asm
-.include ../../sw/libplp/libplp_uart.asm
-.include ../../sw/libplp/libplp_switches.asm
-.include ../../sw/libplp/libplp_sseg.asm
 
 #
 #startup 
@@ -55,7 +48,7 @@ shiny:
 
 #the led routine, which waits for the switches to be non-zero
 flash_leds:
-	srl $s3, $s2, 3		#one eighth of the frequency into $a0
+	srl $s3, $s2, 4		#one eighth of the frequency into $a0
 	ori $s5, $zero, 0xff00
 	ori $s4, $zero, 16
 flash_leds_loop:		#scroll the leds through and update the sseg
@@ -76,7 +69,7 @@ flash_leds_loop2:
 
 #more seven segment
 sseg_version:
-	li $a0, 0x24a4ffff
+	li $a0, 0x30b0ffff
 	jal libplp_sseg_write_raw
 	nop
 	j flash_leds_loop2
@@ -101,6 +94,7 @@ switches:
 boot_uart:
 	ori $s0, $zero, 0x0061 #a
 	ori $s1, $zero, 0x0064 #d
+	ori $at, $zero, 0x0063 #c
 	ori $s2, $zero, 0x006a #j
 	ori $s3, $zero, 0x0076 #v
 	ori $s4, $zero, 0x0066 #f, for fritz!
@@ -113,9 +107,14 @@ boot_uart_run:
 	jal libplp_leds_write
 	nop
 	beq $v0, $s0, boot_uart_address
+	nop
 	beq $v0, $s1, boot_uart_data
+	nop
 	beq $v0, $s2, boot_uart_jump
+	nop
 	beq $v0, $s3, boot_uart_version
+	nop
+	beq $v0, $at, boot_uart_chunk
 	nop
 	j boot_uart_run
 	nop
@@ -168,6 +167,24 @@ boot_uart_version:
 	li $a0, version_string
 	jal libplp_uart_write_string
 	nop
+	j boot_uart_run
+	nop
+
+boot_uart_chunk:
+	jal boot_uart_get_4_bytes
+	nop
+	move $t4, $v0 #data size
+	move $t5, $zero #count
+	boot_uart_chunk_loop:
+		jal boot_uart_get_4_bytes
+		nop
+		sw $v0, 0($s5)
+		addiu $s5, $s5, 4
+		addiu $t5, $t5, 1
+		bne $t5, $t4, boot_uart_chunk_loop
+		nop
+	jal libplp_uart_write
+	move $a0, $s4
 	j boot_uart_run
 	nop
 

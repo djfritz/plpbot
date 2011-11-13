@@ -25,7 +25,7 @@ top level module for mips design
 2.6.2010
 */
 
-module top(clk,leds,rst,txd,rxd,switches,sseg_an,sseg_display, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1, mod_plpbot_uart_rxd_1);
+module top(clk,leds,rst,txd,rxd,switches,sseg_an,sseg_display, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_gpio_gpio, i_button, mod_xbee_uart_rxd, mod_xbee_uart_txd, mod_motor_uart_txd);
 	input clk;
 	output [7:0] leds;
 	input rst,rxd;
@@ -38,16 +38,24 @@ module top(clk,leds,rst,txd,rxd,switches,sseg_an,sseg_display, mod_sram_clk, mod
 	output [23:1] mod_sram_addr;	
 	output [7:0] mod_vga_rgb;
 	output mod_vga_hs, mod_vga_vs;
-	output mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1;
-	input mod_plpbot_uart_rxd_1;
+	inout [15:0] mod_gpio_gpio;
+	input i_button;
+
+	/* plpbot */
+	input mod_xbee_uart_rxd;
+	output mod_xbee_uart_txd, mod_motor_uart_txd;
 
 	wire [31:0] daddr, dout, din, iaddr, iin;
-	wire drw;
-	wire cpu_c, arbiter_c, cpu_stall;
+	wire [1:0] drw;
+	wire cpu_stall;
+	wire rst_debounced;
 
+	wire int, int_ack;
+
+	debounce d_t(clk, rst, rst_debounced);
 	clock c_t(clk, c);
-	cpu cpu_t(rst, c, cpu_stall, daddr, dout, din, drw, iaddr, iin);
-        arbiter arbiter_t(rst, c, daddr, dout, din, drw, iaddr, iin, leds, txd, rxd, switches, sseg_an, sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_plpbot_uart_txd_0, mod_plpbot_uart_txd_1, mod_plpbot_uart_rxd_1);
+	cpu cpu_t(rst_debounced, c, cpu_stall, daddr, dout, din, drw, iaddr, iin, int, int_ack);
+        arbiter arbiter_t(rst_debounced, c, daddr, dout, din, drw, iaddr, iin, int, int_ack, leds, txd, rxd, switches, sseg_an, sseg_display, cpu_stall, mod_sram_clk, mod_sram_adv, mod_sram_cre, mod_sram_ce, mod_sram_oe, mod_sram_we, mod_sram_lb, mod_sram_ub, mod_sram_data, mod_sram_addr, mod_vga_rgb, mod_vga_hs, mod_vga_vs, mod_gpio_gpio, i_button, mod_xbee_uart_rxd, mod_xbee_uart_txd, mod_motor_uart_txd);
 endmodule
 	
 

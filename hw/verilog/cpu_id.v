@@ -29,13 +29,14 @@ module cpu_id(rst, clk, cpu_stall, if_pc, if_inst, wb_rfw,
 		wb_rf_waddr, wb_rf_wdata, p_rfa, p_rfb, p_se, 
 		p_shamt, p_func, p_rf_waddr, p_c_rfw, p_c_wbsource,
 		p_c_drw, p_c_alucontrol, p_c_j, p_c_b, p_c_jjr,
-		p_jaddr, p_pc, p_c_rfbse, p_rs, p_rt, c_stall);
+		p_jaddr, p_pc, p_c_rfbse, p_rs, p_rt, c_stall, int_flush);
 	input 		rst, clk, cpu_stall;
 	input	[31:0]	if_pc;
 	input	[31:0]	if_inst;
 	input 		wb_rfw;
 	input   [4:0]	wb_rf_waddr;
 	input   [31:0]  wb_rf_wdata;
+	input		int_flush;
 	output reg [31:0] p_rfa;
 	output reg [31:0] p_rfb;
 	output reg [31:0] p_se;
@@ -44,7 +45,7 @@ module cpu_id(rst, clk, cpu_stall, if_pc, if_inst, wb_rfw,
 	output reg [4:0]  p_rf_waddr;
 	output reg 	  p_c_rfw;
 	output reg [1:0]  p_c_wbsource;
-	output reg 	  p_c_drw;
+	output reg [1:0]  p_c_drw;
 	output reg [5:0]  p_c_alucontrol;
 	output reg 	  p_c_j;
 	output reg	  p_c_b;
@@ -84,7 +85,8 @@ module cpu_id(rst, clk, cpu_stall, if_pc, if_inst, wb_rfw,
 		(opcode == 6'h23) ? 2'h1 :
 		(opcode == 6'h03) ? 2'h2 :
 		(opcode == 6'h00 && func == 6'h09) ? 2'h2 : 0; 
-	wire c_drw = (opcode == 6'h2b && !stall) ? 1 : 0;
+	wire [1:0] c_drw = (opcode == 6'h2b && !stall) ? 2'b01 : 
+			   (opcode == 6'h23 && !stall) ? 2'b10 : 2'b00;	/* c_drw[1] = read, c_drw[0] = write, 00 = nop */
 	wire [5:0] c_alucontrol = opcode;
 	wire c_se = (opcode == 6'h0c || opcode == 6'h0d) ? 0 : 1;
 	wire c_rfbse = (opcode == 6'h00 || opcode == 6'h04 || opcode == 6'h05) ? 0 : 1;
@@ -114,7 +116,7 @@ module cpu_id(rst, clk, cpu_stall, if_pc, if_inst, wb_rfw,
 
 	always @(posedge clk) begin
 		if (!cpu_stall) begin
-		if (rst) begin		
+		if (rst || int_flush) begin		
 			p_rfa <= 0;
 			p_rfb <= 0;
 			p_shamt <= 0;
@@ -160,13 +162,9 @@ module cpu_id(rst, clk, cpu_stall, if_pc, if_inst, wb_rfw,
 	end
 
 	always @(negedge clk) begin
-		if (!cpu_stall) begin
 		/* regfile */
 		if (wb_rfw && wb_rf_waddr != 5'd0) begin
 			rf[wb_rf_waddr] <= wb_rf_wdata;
-		end
-		//if(wb_rfw)
-		//	$display("ID: DATA %x written to REG %x", wb_rf_wdata, wb_rf_waddr);
 		end
 	end
 	

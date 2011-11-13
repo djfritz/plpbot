@@ -52,16 +52,20 @@ SEND BUFFER:
 	Lower byte contains data to be sent
 
 */
-module mod_plpbot_uart(rst, clk, ie, de, iaddr, daddr, drw, din, iout, dout, txd, rxd);
+module mod_plpbot_uart(rst, clk, ie, de, iaddr, daddr, drw, din, iout, dout, txd, rxd, i_uart, pmc_uart_recv, pmc_uart_send);
         input rst;
         input clk;
         input ie,de;
         input [31:0] iaddr, daddr;
-        input drw;
+        input [1:0] drw;
         input [31:0] din;
         output [31:0] iout, dout;
 	output txd;
 	input rxd;
+	output i_uart;
+
+	/* pmc */
+	output pmc_uart_recv, pmc_uart_send;
 
         /* by spec, the iout and dout signals must go hiZ when we're not using them */
         wire [31:0] idata, ddata;
@@ -75,24 +79,28 @@ module mod_plpbot_uart(rst, clk, ie, de, iaddr, daddr, drw, din, iout, dout, txd
 	wire data_rdy,cts,send,clear;
 	wire [7:0] in_buffer;
 	reg [7:0] out_buffer;
-	plpbot_uart_core uart(clk,rxd,txd,in_buffer,out_buffer,data_rdy,clear,cts,send,rst);
+	uart_plpbot_core uart(clk,rxd,txd,in_buffer,out_buffer,data_rdy,clear,cts,send,rst);
 	
-	assign send = (de && drw && daddr == 32'h0) ? din[0] : 0;
-	assign clear = (de && drw && daddr == 32'h0) ? din[1] : 0;
+	assign send = (de && drw[0] && daddr == 32'h0) ? din[0] : 0;
+	assign clear = (de && drw[0] && daddr == 32'h0) ? din[1] : 0;
+
+	assign pmc_uart_recv = clear;
+	assign pmc_uart_send = send;
 
 	assign ddata = (daddr == 32'h0) ? 0 : /* command reg */
 			  (daddr == 32'h4) ? {30'h0,data_rdy,cts} : /* status */
 			  (daddr == 32'h8) ? {24'h0,in_buffer} : /* receive */
 			  (daddr == 32'hc) ? {24'h0,out_buffer} : 0; /* transmit */
-	
+	assign i_uart = data_rdy;	
+
 	/* all data bus activity is negative edge triggered */
 	always @(negedge clk) begin
-		if (de && drw && daddr == 32'hc) /* write a new byte to the output buffer */
+		if (de && drw[0] && daddr == 32'hc) /* write a new byte to the output buffer */
 			out_buffer = din[7:0];
 	end
 endmodule
 
-module plpbot_uart_baud_generator(clk,baud,baud16,rst);
+module uart_plpbot_baud_generator(clk,baud,baud16,rst);
 	input clk,rst;
 	output baud;
 	output baud16;
@@ -121,7 +129,7 @@ module plpbot_uart_baud_generator(clk,baud,baud16,rst);
 	end
 endmodule
 
-module plpbot_uart_core(clk,rxd,txd,in_buffer,out_buffer,data_rdy,clear,cts,send,rst);
+module uart_plpbot_core(clk,rxd,txd,in_buffer,out_buffer,data_rdy,clear,cts,send,rst);
 	input clk,rst;
 	input rxd;
 	input clear;
@@ -134,7 +142,7 @@ module plpbot_uart_core(clk,rxd,txd,in_buffer,out_buffer,data_rdy,clear,cts,send
 	
 	wire baud;
 	wire baud16;
-	plpbot_uart_baud_generator ubg(clk,baud,baud16,rst);
+	uart_plpbot_baud_generator ubg(clk,baud,baud16,rst);
 
 	/* receive core */
 	reg [3:0] rxd_state;
