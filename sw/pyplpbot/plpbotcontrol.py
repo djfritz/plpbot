@@ -3,14 +3,9 @@
 import pygame
 from pygame.locals import *
 import time
-#import vlc
 import sys
 import threading
 import socket
-
-#vlc initialization
-#p=vlc.MediaPlayer('./sample_mpeg4.mp4')
-#p.play()
 
 #command window
 black = (0,0,0)
@@ -29,7 +24,9 @@ wa = pygame.image.load("wa.png").convert()
 wd = pygame.image.load("wd.png").convert()
 sd = pygame.image.load("sd.png").convert()
 sa = pygame.image.load("sa.png").convert()
-
+turbo = pygame.image.load("turbo.png").convert()
+dir_pos = [450,220]
+turbo_pos = [414,1]
 done=False
 clock=pygame.time.Clock()
 
@@ -44,6 +41,12 @@ maxR = chr(255)
 minR = chr(128)
 motorL = neutralL
 motorR = neutralR
+
+#low gear
+low_maxL = chr(96)
+low_maxR = chr(224)
+low_minL = chr(32)
+low_minR = chr(160)
 
 def comm_thread():
 	while True:
@@ -71,47 +74,82 @@ while done==False:
 	keys = ""
 	pygame.event.pump()
 	key=pygame.key.get_pressed()
-	dir_pos = [450,220]
 	if key[pygame.K_w] and key[pygame.K_a]:
 		screen.blit(wa,dir_pos)
-		motorL = neutralL
-		motorR = maxR
+		if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
+			motorL = neutralL
+			motorR = maxR
+		else:
+			motorL = neutralL
+			motorR = low_maxR
 	elif key[pygame.K_w] and key[pygame.K_d]:
 		screen.blit(wd,dir_pos)
-		motorL = maxL
-		motorR = neutralR
+		if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
+			motorL = maxL
+			motorR = neutralR
+		else:
+			motorL = low_maxL
+			motorR = neutralR
 	elif key[pygame.K_s] and key[pygame.K_a]:
 		screen.blit(sa,dir_pos)
-		motorL = neutralL
-		motorR = minR
+		if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
+			motorL = neutralL
+			motorR = minR
+		else:
+			motorL = neutralL
+			motorR = low_minR
 	elif key[pygame.K_s] and key[pygame.K_d]:
 		screen.blit(sd,dir_pos)
-		motorL = minL
-		motorR = neutralR
+		if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
+			motorL = minL
+			motorR = neutralR
+		else:
+			motorL = low_minL
+			motorR = neutralR
 	elif key[pygame.K_w]:
-		screen.blit(w,dir_pos)	
-		motorL = maxL
-		motorR = maxR
+		screen.blit(w,dir_pos)
+		if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
+			motorL = maxL
+			motorR = maxR
+		else:
+			motorL = low_maxL
+			motorR = low_maxR
 	elif key[pygame.K_s]:
 		screen.blit(s,dir_pos)
-		motorL = minL
-		motorR = minR
+		if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
+			motorL = minL
+			motorR = minR
+		else:
+			motorL = low_minL
+			motorR = low_minR
 	elif key[pygame.K_a]:
 		screen.blit(a,dir_pos)
-		motorL = minL
-		motorR = maxR
+		if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
+			motorL = minL
+			motorR = maxR
+		else:
+			motorL = low_minL
+			motorR = low_maxR
 	elif key[pygame.K_d]:
 		screen.blit(d,dir_pos)
-		motorL = maxL
-		motorR = minR
+		if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
+			motorL = maxL
+			motorR = minR
+		else:
+			motorL = low_maxL
+			motorR = low_minR
 	else:
 		motorL = neutralL
 		motorR = neutralR
 
-#	font = pygame.font.Font(None, 25)	
-#	text = font.render(keys,True,white)
+	# draw the TURBO MODE!
+	if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
+		screen.blit(turbo,turbo_pos)
 
-#	screen.blit(text,[10,10])
+	font = pygame.font.Font(None, 25)	
+	text = font.render(hex(ord(motorL)) + ' ' + hex(ord(motorR)),True,white)
+
+	screen.blit(text,[10,10])
 	pygame.display.flip()
 
 pygame.quit()
