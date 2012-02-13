@@ -36,7 +36,7 @@ class bs:
 				data = self.socket.recv(3)
 				if not data:
 					break
-				print(data)
+				print(hex(ord(data[0])) + ' ' + hex(ord(data[1])) + ' ' + hex(ord(data[2])))
 				self.serial.write(data)
 			except socket.error, msg:
 				sys.stderr.write("[e] sockser: %s\n" % msg)
