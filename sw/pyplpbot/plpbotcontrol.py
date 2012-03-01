@@ -31,7 +31,7 @@ done=False
 clock=pygame.time.Clock()
 
 #socket
-sock = socket.create_connection((sys.argv[1],1337))
+#sock = socket.create_connection((sys.argv[1],1337))
 header = chr(0x7f)
 neutralL = chr(64)
 neutralR = chr(192)
@@ -54,10 +54,10 @@ def comm_thread():
 		time.sleep(.01)
 
 #start the communication thread
-thread_comm_thread = threading.Thread(target=comm_thread)
-thread_comm_thread.setDaemon(True)
-thread_comm_thread.setName("comm_thread")
-thread_comm_thread.start()
+#thread_comm_thread = threading.Thread(target=comm_thread)
+#thread_comm_thread.setDaemon(True)
+#thread_comm_thread.setName("comm_thread")
+#thread_comm_thread.start()
 
 while done==False:
 	for event in pygame.event.get():
