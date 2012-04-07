@@ -6,6 +6,7 @@ import time
 import sys
 import threading
 import socket
+from ez430 import *
 
 #command window
 black = (0,0,0)
@@ -59,6 +60,15 @@ def comm_thread():
 #thread_comm_thread.setName("comm_thread")
 #thread_comm_thread.start()
 
+ez = False
+if len(sys.argv) == 3:
+	ez = True
+
+#drive from a ti chronos watch?
+ez_ser = None
+if ez:
+	ez_ser = ez_start()
+
 while done==False:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -74,6 +84,7 @@ while done==False:
 	keys = ""
 	pygame.event.pump()
 	key=pygame.key.get_pressed()
+
 	if key[pygame.K_w] and key[pygame.K_a]:
 		screen.blit(wa,dir_pos)
 		if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
@@ -141,6 +152,67 @@ while done==False:
 	else:
 		motorL = neutralL
 		motorR = neutralR
+
+
+	if ez:
+		ez_data = ez_read(ez_ser)
+		if ez_data != None:
+			ez_x = ord(ez_data[0])
+			ez_y = ord(ez_data[1])
+			ez_z = ord(ez_data[2])
+
+			print ez_x
+			print ez_y
+			print ez_z
+			print "\n"
+
+			ez_w = False
+			ez_a = False
+			ez_s = False
+			ez_d = False
+
+			if ez_x > 200 and ez_x < 250:
+				ez_w = True
+			if ez_x > 40 and ez_x < 100:
+				ez_s = True
+			if ez_y > 150 and ez_y < 230:
+				ez_a = True
+			if ez_y > 10 and ez_y < 100:
+				ez_d = True
+
+			if ez_w and not (ez_a or ez_d):
+				screen.blit(w,dir_pos)
+				motorL = maxL
+				motorR = maxR
+			if ez_s and not(ez_a or ez_d):
+				screen.blit(s,dir_pos)
+				motorL = minL
+				motorR = minR
+			if ez_a and not (ez_w or ez_s):
+				screen.blit(a,dir_pos)
+				motorL = minL
+				motorR = maxR
+			if ez_d and not(ez_w or ez_s):
+				screen.blit(d,dir_pos)
+				motorL = maxL
+				motorR = minR
+			if ez_w and ez_a:
+				screen.blit(wa,dir_pos)
+				motorL = neutralL
+				motorR = maxR
+			if ez_w and ez_d:
+				screen.blit(wd,dir_pos)
+				motorL = maxL
+				motorR = neutralR
+			if ez_s and ez_a:
+				screen.blit(sa,dir_pos)
+				motorL = neutralL
+				motorR = minR
+			if ez_s and ez_d:
+				screen.blit(sd,dir_pos)
+				motorL = minL
+				motorR = neutralR
+
 
 	# draw the TURBO MODE!
 	if key[pygame.K_RSHIFT] or key[pygame.K_LSHIFT]:
